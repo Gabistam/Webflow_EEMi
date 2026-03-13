@@ -1,0 +1,762 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprendre le CMS Webflow - Blog de Luna</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2D3748;
+            background: #F7FAFC;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section h3 {
+            color: #2D3748;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .highlight {
+            background: #FFF5F5;
+            border-left: 4px solid #E53E3E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            color: #2D3748;
+        }
+
+        .schema-container {
+            background: #F7FAFC;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .schema {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            min-width: 800px;
+        }
+
+        .schema-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .schema-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 1.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .schema-box h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .schema-box p {
+            font-size: 0.9rem;
+            color: #4A5568;
+        }
+
+        .schema-arrow {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .step h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .code-example {
+            background: #2D3748;
+            color: #E2E8F0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .field-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .field-card {
+            background: #F7FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #2D3748;
+        }
+
+        .field-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .field-card .type {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .analogy {
+            background: #F0FFF4;
+            border-left: 4px solid #48BB78;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .analogy h4 {
+            color: #48BB78;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .visual-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            color: #2D3748;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .flow-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .example-result {
+            background: #EDF2F7;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blog-card-content {
+            padding: 1.5rem;
+        }
+
+        .blog-card h4 {
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-card .category {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #E2E8F0;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .schema {
+                min-width: auto;
+            }
+            
+            .schema-row {
+                flex-direction: column;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab {
+                border-left: 3px solid transparent;
+                border-bottom: none;
+            }
+            
+            .tab.active {
+                border-left-color: #667eea;
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 Le CMS Webflow Expliqué Simplement</h1>
+        <p>Comprendre le système de blog en 15 minutes avec le projet de Luna</p>
+    </div>
+
+    <div class="container">
+        <!-- Section 1: L'analogie -->
+        <div class="section">
+            <h2>🍪 Comprendre avec une analogie simple</h2>
+            
+            <div class="analogy">
+                <h4>🏭 Le CMS c'est comme une usine de gâteaux</h4>
+                <p><strong>Imaginez une pâtisserie industrielle :</strong></p>
+                <ul style="margin-left: 2rem; margin-top: 1rem;">
+                    <li><strong>Le moule à gâteau</strong> = La Collection (structure)</li>
+                    <li><strong>La recette</strong> = Les champs (ingrédients nécessaires)</li>
+                    <li><strong>Chaque gâteau produit</strong> = Un article de blog</li>
+                    <li><strong>La vitrine de présentation</strong> = La page liste du blog</li>
+                    <li><strong>L'emballage individuel</strong> = La page détail d'un article</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 1.5rem; font-size: 1.1rem;">
+                <strong>Principe clé :</strong> Vous créez UNE FOIS le moule (la structure), 
+                puis vous l'utilisez pour créer autant de gâteaux (articles) que vous voulez !
+            </p>
+        </div>
+
+        <!-- Section 2: Les 4 éléments essentiels -->
+        <div class="section">
+            <h2>🔑 Les 4 éléments du CMS Webflow</h2>
+
+            <div class="schema-container">
+                <div class="schema">
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>1️⃣ COLLECTION</h4>
+                            <p>La structure de données<br>Exemple: "Blog Posts"</p>
+                        </div>
+                        <div class="schema-arrow">→</div>
+                        <div class="schema-box">
+                            <h4>2️⃣ CHAMPS (Fields)</h4>
+                            <p>Les informations à remplir<br>Exemple: Titre, Image, Texte</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; font-size: 2rem; color: #667eea;">↓</div>
+                    
+                    <div class="schema-row">
+                        <div class="schema-box">
+                            <h4>3️⃣ COLLECTION LIST</h4>
+                            <p>Affichage de plusieurs articles<br>La page blog avec tous les articles</p>
+                        </div>
+                        <div class="schema-arrow">→</div>
+                        <div class="schema-box">
+                            <h4>4️⃣ COLLECTION TEMPLATE</h4>
+                            <p>Design d'un article individuel<br>La page de lecture d'un article</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Retenez ceci :</strong> COLLECTION = Structure | CHAMPS = Contenu | LIST = Plusieurs | TEMPLATE = Un seul
+            </div>
+        </div>
+
+        <!-- Section 3: Cas pratique guidé -->
+        <div class="section">
+            <h2>🎯 Cas Pratique : Blog de Luna en 7 étapes</h2>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab(0)">Étape 1-2</div>
+                <div class="tab" onclick="showTab(1)">Étape 3-4</div>
+                <div class="tab" onclick="showTab(2)">Étape 5-7</div>
+            </div>
+
+            <div class="tab-content active" id="tab-0">
+                <div class="step">
+                    <h3><span class="step-number">1</span>Créer la Collection "Blog Posts"</h3>
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">A</div>
+                            <div>Cliquer sur l'icône <strong>CMS</strong> (base de données) dans le panneau de gauche</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">B</div>
+                            <div>Cliquer sur <strong>"Create New Collection"</strong></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">C</div>
+                            <div>Nommer la collection : <strong>"Blog Posts"</strong></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">D</div>
+                            <div>Cliquer sur <strong>"Create"</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3><span class="step-number">2</span>Définir les champs nécessaires</h3>
+                    <p style="margin-bottom: 1rem;">Webflow crée automatiquement 2 champs. Ajoutez les autres :</p>
+                    
+                    <div class="field-list">
+                        <div class="field-card">
+                            <h4>Name (Auto)</h4>
+                            <span class="type">Text</span>
+                            <p>Le titre de l'article</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Slug (Auto)</h4>
+                            <span class="type">Text</span>
+                            <p>L'URL de l'article</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Featured Image</h4>
+                            <span class="type">Image</span>
+                            <p>Photo principale</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Summary</h4>
+                            <span class="type">Plain Text</span>
+                            <p>Résumé court (150 car.)</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Content</h4>
+                            <span class="type">Rich Text</span>
+                            <p>Contenu complet formaté</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Category</h4>
+                            <span class="type">Option</span>
+                            <p>Relaxation, Mindfulness...</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Published Date</h4>
+                            <span class="type">Date/Time</span>
+                            <p>Date de publication</p>
+                        </div>
+                        <div class="field-card">
+                            <h4>Author</h4>
+                            <span class="type">Plain Text</span>
+                            <p>Luna Martinez (défaut)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-1">
+                <div class="step">
+                    <h3><span class="step-number">3</span>Ajouter des articles de test</h3>
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">A</div>
+                            <div>Dans la collection "Blog Posts", cliquer sur <strong>"Add Item"</strong></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">B</div>
+                            <div>Remplir tous les champs pour l'article 1</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">C</div>
+                            <div>Cliquer sur <strong>"Save"</strong> puis <strong>"Publish"</strong></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">D</div>
+                            <div>Répéter pour créer 2-3 articles de test</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>💡 Astuce :</strong> Créez au minimum 3 articles pour bien visualiser le rendu de la liste
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3><span class="step-number">4</span>Créer la page Blog (Liste)</h3>
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">A</div>
+                            <div>Pages → <strong>"Add Page"</strong> → Nommer "Blog"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">B</div>
+                            <div>Ouvrir la page dans le Designer</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">C</div>
+                            <div>Ajouter une Section avec titre "Blog Bien-être"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">D</div>
+                            <div>Glisser un <strong>"Collection List Wrapper"</strong> dans la section</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">E</div>
+                            <div>Sélectionner <strong>"Get items from: Blog Posts"</strong></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">F</div>
+                            <div>Configurer : Limit = 6, Sort by = Published Date (Newest first)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-2">
+                <div class="step">
+                    <h3><span class="step-number">5</span>Designer l'affichage d'un article dans la liste</h3>
+                    <p style="margin-bottom: 1rem;">Dans le "Collection Item", ajouter et connecter les éléments :</p>
+                    
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">1</div>
+                            <div><strong>Image</strong> → Connecter au champ "Featured Image" (icône de lien)</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">2</div>
+                            <div><strong>Heading H3</strong> → Connecter au champ "Name"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">3</div>
+                            <div><strong>Text Block</strong> → Connecter au champ "Summary"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">4</div>
+                            <div><strong>Text Block</strong> → Connecter au champ "Category"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">5</div>
+                            <div><strong>Link</strong> "Lire l'article" → Link to "Blog Posts Template Page"</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>🔗 Connexion des données :</strong> Cliquer sur l'icône "lien" à côté de chaque élément pour le connecter à un champ de la collection
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3><span class="step-number">6</span>Designer la page Template (Article individuel)</h3>
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">A</div>
+                            <div>Pages → Ouvrir <strong>"Blog Posts Template"</strong> (auto-créée)</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">B</div>
+                            <div>Ajouter Section Header avec H1 connecté à "Name"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">C</div>
+                            <div>Ajouter Image connectée à "Featured Image"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">D</div>
+                            <div>Ajouter <strong>Rich Text Element</strong> connecté à "Content"</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">E</div>
+                            <div>Ajouter métadonnées : Category, Date, Author</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3><span class="step-number">7</span>Tester et publier</h3>
+                    <div class="visual-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">1</div>
+                            <div>Cliquer sur <strong>Preview</strong> pour tester</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">2</div>
+                            <div>Vérifier la page Blog (liste des articles)</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">3</div>
+                            <div>Cliquer sur un article pour voir la page Template</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">4</div>
+                            <div>Ajuster le design si nécessaire</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">5</div>
+                            <div>Cliquer sur <strong>Publish</strong> quand satisfait</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Exemple de résultat -->
+        <div class="section">
+            <h2>✨ Résultat Final : Blog de Luna</h2>
+            
+            <h3>Page Blog (Collection List)</h3>
+            <div class="example-result">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="blog-card">
+                        <img src="https://picsum.photos/seed/relaxation/600/200" alt="Image Relaxation" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                        <div class="blog-card-content">
+                            <span class="category">Relaxation</span>
+                            <h4>5 techniques de relaxation</h4>
+                            <p style="color: #4A5568; font-size: 0.9rem;">Découvrez 5 techniques simples pour retrouver sérénité et équilibre...</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-card">
+                        <img src="https://picsum.photos/seed/mindfulness/600/200" alt="Image Mindfulness" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                        <div class="blog-card-content">
+                            <span class="category">Mindfulness</span>
+                            <h4>L'art de la respiration consciente</h4>
+                            <p style="color: #4A5568; font-size: 0.9rem;">La respiration consciente, porte d'entrée vers un état de calme...</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-card">
+                        <img src="https://picsum.photos/seed/routine/600/200" alt="Image Routine" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                        <div class="blog-card-content">
+                            <span class="category">Développement Personnel</span>
+                            <h4>Créer sa routine matinale</h4>
+                            <p style="color: #4A5568; font-size: 0.9rem;">Comment structurer vos matinées pour commencer dans l'énergie...</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">Page Article (Collection Template)</h3>
+            <div class="example-result">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <span class="category" style="font-size: 0.9rem;">Relaxation</span>
+                    <h2 style="margin: 1rem 0; color: #2D3748;">5 techniques de relaxation pour un quotidien apaisé</h2>
+                    <p style="color: #4A5568;">Par Luna Martinez • 12 mars 2025</p>
+                </div>
+                <img src="https://picsum.photos/seed/featured/1200/300" alt="Image Featured" style="width: 100%; height: 300px; object-fit: cover; display: block; border-radius: 8px; margin-bottom: 2rem;">
+                <div style="max-width: 700px; margin: 0 auto; line-height: 1.8;">
+                    <p style="margin-bottom: 1rem;">Dans notre quotidien souvent stressant, il est essentiel de prendre des moments pour se reconnecter à soi-même...</p>
+                    <h3 style="color: #2D3748; margin: 1.5rem 0 1rem;">Technique 1 : La respiration profonde</h3>
+                    <p>Description de la technique...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Points clés -->
+        <div class="section">
+            <h2>🎓 Points Clés à Retenir</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div class="highlight">
+                    <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">1. Une Collection = Une structure</h4>
+                    <p>Vous créez une fois la structure, elle servira pour tous les articles</p>
+                </div>
+                
+                <div class="highlight">
+                    <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">2. Les champs = Le contenu</h4>
+                    <p>Chaque champ représente une information à remplir (titre, image, texte...)</p>
+                </div>
+                
+                <div class="highlight">
+                    <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">3. Collection List = Plusieurs</h4>
+                    <p>Affiche plusieurs articles ensemble (page blog)</p>
+                </div>
+                
+                <div class="highlight">
+                    <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">4. Template = Un seul</h4>
+                    <p>Design appliqué automatiquement à chaque article individuel</p>
+                </div>
+            </div>
+
+            <div class="analogy" style="margin-top: 2rem;">
+                <h4>💡 La magie du CMS</h4>
+                <p><strong>Sans CMS :</strong> Vous devez créer manuellement une page pour chaque article (50 articles = 50 pages à créer et maintenir)</p>
+                <p style="margin-top: 0.5rem;"><strong>Avec CMS :</strong> Vous créez 1 fois le design, puis vous ajoutez juste le contenu (50 articles = 50x remplir un formulaire simple)</p>
+            </div>
+        </div>
+
+       
+
+       
+    </div>
+
+    <script>
+        function showTab(index) {
+            // Cacher tous les contenus
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Désactiver tous les onglets
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Activer le contenu et l'onglet sélectionnés
+            document.getElementById('tab-' + index).classList.add('active');
+            tabs[index].classList.add('active');
+        }
+    </script>
+</body>
+</html>
