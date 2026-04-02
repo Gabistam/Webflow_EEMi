@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactions & Animations Webflow</title>
+    <style>
+        :root {
+            --bg-page: #F7FAFC;
+            --bg-section: #ffffff;
+            --bg-schema: #F7FAFC;
+            --bg-field-card: #F7FAFC;
+            --bg-demo: #EDF2F7;
+            --text-primary: #2D3748;
+            --text-secondary: #4A5568;
+            --border-card: #E2E8F0;
+            --shadow: rgba(0,0,0,0.08);
+            --shadow-card: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #1A202C;
+            --bg-section: #2D3748;
+            --bg-schema: #1A202C;
+            --bg-field-card: #1A202C;
+            --bg-demo: #1A202C;
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --border-card: #4A5568;
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-card: rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-page);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+            color: white;
+            padding: 3rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(255,255,255,0.03) 40px,
+                rgba(255,255,255,0.03) 80px
+            );
+        }
+
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; position: relative; }
+        .header p  { font-size: 1.2rem; opacity: 0.9; position: relative; }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── DARK TOGGLE ── */
+        .dark-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .dark-toggle:hover { background: rgba(255,255,255,0.35); }
+        [data-theme="dark"] .dark-toggle { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.3); }
+
+        /* ── NAV ── */
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-section);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin: 1.5rem 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-back:hover { transform: translateX(-3px); }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .section {
+            background: var(--bg-section);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin: 1.8rem 0 1rem;
+        }
+
+        /* ── ACCENT COLORS ── */
+        .accent-purple { color: #9b59b6; }
+        .accent-pink   { color: #e91e8c; }
+        .accent-blue   { color: #4facfe; }
+        .accent-orange { color: #f5a623; }
+
+        /* ── HIGHLIGHT / ANALOGY ── */
+        .highlight {
+            background: #FFF5F5;
+            border-left: 4px solid #E53E3E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            color: #2D3748;
+        }
+
+        [data-theme="dark"] .highlight { background: #2D2020; color: #E2E8F0; }
+
+        .analogy {
+            background: #F0F4FF;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        [data-theme="dark"] .analogy { background: #1E2340; }
+
+        .analogy h4 { color: #667eea; margin-bottom: 0.5rem; }
+
+        .tip {
+            background: #F0FFF4;
+            border-left: 4px solid #48BB78;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        [data-theme="dark"] .tip { background: #1C2F23; }
+        .tip strong { color: #48BB78; }
+
+        /* ── GRID CARDS ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--bg-field-card);
+            border: 2px solid var(--border-card);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .card:hover { transform: translateY(-3px); }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .card h4 { margin-bottom: 0.4rem; font-size: 1rem; }
+        .card p  { font-size: 0.875rem; color: var(--text-secondary); }
+
+        .card.purple { border-color: #9b59b6; }
+        .card.pink   { border-color: #e91e8c; }
+        .card.blue   { border-color: #4facfe; }
+        .card.orange { border-color: #f5a623; }
+        .card.green  { border-color: #48BB78; }
+        .card.teal   { border-color: #38B2AC; }
+
+        /* ── TRIGGER / ACTION FLOW ── */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-schema);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            transition: background 0.3s ease;
+        }
+
+        .flow-box {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg-section);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow-card);
+        }
+
+        .flow-box .icon { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+        .flow-box .label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .flow-box .value { font-size: 0.95rem; font-weight: 600; }
+
+        .flow-arrow { font-size: 1.5rem; color: #667eea; font-weight: bold; flex-shrink: 0; }
+
+        /* ── TRIGGER LIST ── */
+        .trigger-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .trigger-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            background: var(--bg-field-card);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .trigger-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .trigger-icon.purple { background: #f3e8ff; }
+        .trigger-icon.blue   { background: #e0f2fe; }
+        .trigger-icon.pink   { background: #fce7f3; }
+        .trigger-icon.orange { background: #fff7ed; }
+        .trigger-icon.green  { background: #f0fdf4; }
+        .trigger-icon.teal   { background: #f0fdfa; }
+
+        .trigger-item h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .trigger-item p  { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* ── DEMO ZONE ── */
+        .demo-zone {
+            background: var(--bg-demo);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: background 0.3s ease;
+        }
+
+        .demo-zone h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .demo-item span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Demo boxes */
+        .demo-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+        }
+
+        /* Hover effects */
+        .demo-fade:hover   { opacity: 0.2; }
+        .demo-scale:hover  { transform: scale(1.4); }
+        .demo-move:hover   { transform: translateY(-20px); }
+        .demo-rotate:hover { transform: rotate(180deg); }
+        .demo-blur:hover   { filter: blur(5px); }
+        .demo-color:hover  { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .demo-shadow:hover { box-shadow: 0 20px 40px rgba(102,126,234,0.5); transform: translateY(-5px); }
+        .demo-skew:hover   { transform: skewX(-15deg); }
+
+        /* ── ÉTAPES ── */
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .step-row {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .step-content {
+            background: var(--bg-field-card);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 0.9rem 1.1rem;
+            flex: 1;
+            transition: background 0.3s ease;
+        }
+
+        .step-content strong { display: block; margin-bottom: 0.25rem; }
+        .step-content p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+
+        /* ── COMPARISON TABLE ── */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .compare-table th {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.9rem 1rem;
+            text-align: left;
+        }
+
+        .compare-table th:first-child { border-radius: 8px 0 0 0; }
+        .compare-table th:last-child  { border-radius: 0 8px 0 0; }
+
+        .compare-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-card);
+            color: var(--text-primary);
+        }
+
+        .compare-table tr:nth-child(even) td { background: var(--bg-field-card); }
+        .compare-table tr:last-child td { border-bottom: none; }
+
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .tag.element { background: #f3e8ff; color: #9b59b6; }
+        .tag.page    { background: #e0f2fe; color: #0284c7; }
+        [data-theme="dark"] .tag.element { background: #3D2060; color: #c084fc; }
+        [data-theme="dark"] .tag.page    { background: #0c2040; color: #7dd3fc; }
+
+        /* ── PRATIQUE TABS ── */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border-card);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover { color: #f5576c; }
+        .tab.active { color: #f5576c; border-bottom-color: #f5576c; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── PRATIQUE SCENARIO ── */
+        .scenario-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scenario-icon { font-size: 2rem; flex-shrink: 0; }
+        .scenario-header h4 { font-size: 1.1rem; margin: 0; }
+        .scenario-header p  { margin: 0.25rem 0 0; opacity: 0.9; font-size: 0.9rem; }
+
+        /* ── POINTS CLES ── */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .key-point {
+            background: var(--bg-field-card);
+            border: 2px solid var(--border-card);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: background 0.3s ease;
+        }
+
+        .key-point .num {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .key-point h4 { font-size: 0.95rem; margin-bottom: 0.4rem; color: #f5576c; }
+        .key-point p  { font-size: 0.875rem; color: var(--text-secondary); }
+
+        /* ── WARNING BOX ── */
+        .warning {
+            background: #FFFBEB;
+            border-left: 4px solid #F59E0B;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            color: #92400E;
+        }
+
+        [data-theme="dark"] .warning { background: #2D2010; color: #FCD34D; }
+
+        /* ── MEDIA ── */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .flow-diagram { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+            .tabs { border-bottom: none; flex-direction: column; }
+            .tab { border-left: 3px solid transparent; border-bottom: none; }
+            .tab.active { border-left-color: #f5576c; border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙 Mode sombre</button>
+
+    <div class="header">
+        <h1>✨ Interactions & Animations Webflow</h1>
+        <p>Donner vie à vos éléments sans une ligne de code</p>
+        <div class="header-badges">
+            <span class="badge">🖱️ Triggers</span>
+            <span class="badge">🎬 Timeline</span>
+            <span class="badge">📜 Scroll</span>
+            <span class="badge">🖱️ Hover</span>
+            <span class="badge">📱 Page Load</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="nav-back">← Retour au cours CMS</a>
+
+    <div class="container">
+
+        <!-- ══ SECTION 1 : C'est quoi ? ══ -->
+        <div class="section">
+            <h2 class="accent-pink">📱 C'est quoi une interaction Webflow ?</h2>
+
+            <div class="analogy">
+                <h4>📲 Pensez aux gestes sur votre smartphone</h4>
+                <p>Quand vous <strong>swipez</strong> vers le bas → votre fil d'actualité défile.<br>
+                Quand vous <strong>appuyez</strong> sur une notif → elle s'ouvre en plein écran.<br>
+                Quand vous <strong>ouvrez une app</strong> → elle apparaît avec une animation.</p>
+                <p style="margin-top: 0.75rem;">Dans Webflow, c'est exactement le même principe :<br>
+                <strong>Un geste / événement (trigger) → déclenche une animation (action).</strong></p>
+            </div>
+
+            <div class="flow-diagram">
+                <div class="flow-box">
+                    <span class="icon">👆</span>
+                    <div class="label">Déclencheur</div>
+                    <div class="value" style="color: #f5576c;">Trigger</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">
+                    <span class="icon">⚡</span>
+                    <div class="label">Réponse</div>
+                    <div class="value" style="color: #667eea;">Animation</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">
+                    <span class="icon">✨</span>
+                    <div class="label">Résultat</div>
+                    <div class="value" style="color: #48BB78;">Effet visuel</div>
+                </div>
+            </div>
+
+            <p>Les interactions Webflow se configurent depuis le panneau <strong>Interactions (IX2)</strong> — l'icône éclair ⚡ dans la barre de droite du designer. <strong>Aucun JavaScript à écrire</strong> : tout se fait en cliquant.</p>
+
+            <div class="tip">
+                <strong>💡 Pourquoi c'est important ?</strong> Un site avec des animations bien pensées retient 3x plus l'attention qu'un site statique. Les interactions guident l'œil, expliquent les fonctionnalités et donnent un sentiment de qualité.
+            </div>
+        </div>
+
+        <!-- ══ SECTION 2 : Les 2 types ══ -->
+        <div class="section">
+            <h2 class="accent-purple">🔀 Les 2 grandes familles d'interactions</h2>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Déclencheur</th>
+                        <th>Portée</th>
+                        <th>Cas d'usage typique</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Element trigger</strong> <span class="tag element">Élément</span></td>
+                        <td>Action sur un élément précis (hover, clic…)</td>
+                        <td>Cet élément (ou d'autres ciblés)</td>
+                        <td>Bouton qui change de couleur au survol, menu qui s'ouvre au clic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Page trigger</strong> <span class="tag page">Page</span></td>
+                        <td>Événement global (chargement, scroll de la page…)</td>
+                        <td>N'importe quel élément de la page</td>
+                        <td>Animation d'intro au chargement, éléments qui apparaissent au scroll</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="cards-grid">
+                <div class="card purple">
+                    <span class="card-icon">🖱️</span>
+                    <h4 class="accent-purple">Element trigger</h4>
+                    <p>L'utilisateur interagit directement avec un élément. L'animation est liée à cet élément spécifique.</p>
+                </div>
+                <div class="card blue">
+                    <span class="card-icon">📄</span>
+                    <h4 class="accent-blue">Page trigger</h4>
+                    <p>La page elle-même déclenche l'animation (au chargement, ou selon la position de scroll).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SECTION 3 : Déclencheurs ══ -->
+        <div class="section">
+            <h2 class="accent-blue">👆 Les déclencheurs (Triggers)</h2>
+            <p style="margin-bottom: 1.5rem;">Un déclencheur est l'événement qui lance votre animation. Webflow en propose 6 principaux :</p>
+
+            <div class="trigger-list">
+                <div class="trigger-item">
+                    <div class="trigger-icon purple">🖱️</div>
+                    <div>
+                        <h4>Mouse hover</h4>
+                        <p>L'animation se joue quand la souris passe sur l'élément, et se défait quand elle repart. Idéal pour les boutons et cartes.</p>
+                    </div>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-icon pink">👆</div>
+                    <div>
+                        <h4>Mouse click (Tap)</h4>
+                        <p>1er clic = animation A. 2e clic = animation B (retour). Parfait pour les menus, accordéons, modales.</p>
+                    </div>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-icon blue">📜</div>
+                    <div>
+                        <h4>Scroll into view</h4>
+                        <p>Se déclenche quand l'élément entre dans le champ de vision lors du scroll. Idéal pour faire apparaître les sections.</p>
+                    </div>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-icon orange">📏</div>
+                    <div>
+                        <h4>While scrolling in view</h4>
+                        <p>L'animation est liée à la position exacte du scroll (parallax, barres de progression). Effet visuel très puissant.</p>
+                    </div>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-icon green">🚀</div>
+                    <div>
+                        <h4>Page load</h4>
+                        <p>Se lance dès que la page est chargée. Parfait pour les animations d'intro (hero, logo, titre).</p>
+                    </div>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-icon teal">➡️</div>
+                    <div>
+                        <h4>Mouse move in element</h4>
+                        <p>L'animation suit le mouvement de la souris à l'intérieur de l'élément. Effet 3D, regard qui suit, effets de lumière.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>📱 Équivalent mobile :</strong> Hover → long press | Click → tap | Scroll into view → ce que vous voyez quand vous faites défiler votre fil d'actualité
+            </div>
+        </div>
+
+        <!-- ══ SECTION 4 : Les effets ══ -->
+        <div class="section">
+            <h2 class="accent-orange">🎨 Les effets disponibles (Actions)</h2>
+            <p style="margin-bottom: 1.5rem;">Une fois le déclencheur défini, vous choisissez ce qui se passe visuellement. Webflow permet de modifier ces propriétés :</p>
+
+            <div class="cards-grid">
+                <div class="card purple">
+                    <span class="card-icon">↕️</span>
+                    <h4 class="accent-purple">Move (Déplacer)</h4>
+                    <p>Déplace l'élément sur les axes X, Y ou Z. L'effet le plus courant.</p>
+                </div>
+                <div class="card pink">
+                    <span class="card-icon">🔄</span>
+                    <h4 class="accent-pink">Rotate (Rotation)</h4>
+                    <p>Fait pivoter l'élément sur X, Y ou Z. Icône hamburger → croix, par exemple.</p>
+                </div>
+                <div class="card blue">
+                    <span class="card-icon">🔍</span>
+                    <h4 class="accent-blue">Scale (Zoom)</h4>
+                    <p>Agrandit ou réduit l'élément. Parfait pour mettre en valeur une carte au survol.</p>
+                </div>
+                <div class="card orange">
+                    <span class="card-icon">👁️</span>
+                    <h4 class="accent-orange">Opacity (Transparence)</h4>
+                    <p>Fait apparaître ou disparaître progressivement. Le fade-in classique.</p>
+                </div>
+                <div class="card green">
+                    <span class="card-icon">🌫️</span>
+                    <h4 style="color:#48BB78;">Blur (Flou)</h4>
+                    <p>Ajoute ou supprime un flou. Effet glassmorphism ou focus sur un élément.</p>
+                </div>
+                <div class="card teal">
+                    <span class="card-icon">🎨</span>
+                    <h4 style="color:#38B2AC;">Color (Couleur)</h4>
+                    <p>Change la couleur de fond ou de texte en douceur au survol.</p>
+                </div>
+            </div>
+
+            <h3>🎮 Terrain de jeu — Passez la souris sur les cubes</h3>
+            <div class="demo-zone">
+                <h4>Démo interactive — Hover sur chaque élément</h4>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <div class="demo-box demo-fade">👁️</div>
+                        <span>Opacity</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-scale">🔍</div>
+                        <span>Scale</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-move">↕️</div>
+                        <span>Move Y</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-rotate">🔄</div>
+                        <span>Rotate</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-blur">🌫️</div>
+                        <span>Blur</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-color">🎨</div>
+                        <span>Color</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-shadow">✨</div>
+                        <span>Shadow</span>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-box demo-skew">↗️</div>
+                        <span>Skew</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>💡 Combiner les effets :</strong> Dans Webflow, vous pouvez combiner plusieurs actions dans une seule animation. Ex : Move + Opacity + Scale au scroll pour un effet d'apparition spectaculaire.
+            </div>
+        </div>
+
+        <!-- ══ SECTION 5 : Cas pratiques ══ -->
+        <div class="section">
+            <h2 class="accent-pink">🎯 Cas pratiques pas à pas</h2>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab(0)">Hover sur bouton</div>
+                <div class="tab" onclick="showTab(1)">Apparition au scroll</div>
+                <div class="tab" onclick="showTab(2)">Intro page load</div>
+            </div>
+
+            <!-- Tab 0 : Hover bouton -->
+            <div class="tab-content active" id="tab-0">
+                <div class="scenario-header">
+                    <div class="scenario-icon">🖱️</div>
+                    <div>
+                        <h4>Animation hover sur une carte</h4>
+                        <p>La carte se soulève et son ombre s'intensifie au survol — effet "élévation"</p>
+                    </div>
+                </div>
+
+                <div class="steps-list">
+                    <div class="step-row">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <strong>Sélectionner l'élément</strong>
+                            <p>Cliquez sur votre carte dans le canvas du designer.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <strong>Ouvrir le panneau Interactions</strong>
+                            <p>Cliquez sur l'icône ⚡ dans la barre de droite → section "Element triggers".</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <strong>Ajouter un trigger "Mouse hover"</strong>
+                            <p>Cliquez sur <strong>"+ Add trigger"</strong> → sélectionnez <strong>"Mouse hover"</strong>. Webflow crée automatiquement 2 états : Hover In et Hover Out.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <strong>Configurer "Hover In"</strong>
+                            <p>Cliquez sur <strong>"Hover In"</strong> → Add action → <strong>Move</strong> : Y = -8px, durée 300ms, easing "Ease out". Ajoutez une 2e action : <strong>Scale</strong> = 1.02.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <strong>Configurer "Hover Out"</strong>
+                            <p>Cliquez sur <strong>"Hover Out"</strong> → remettez Move Y = 0, Scale = 1. Même durée pour un retour fluide.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <strong>Prévisualiser</strong>
+                            <p>Cliquez sur <strong>Preview</strong> (œil) et survolez la carte pour voir le résultat.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>💡 Astuce easing :</strong> "Ease out" = démarre vite, freine en douceur → sensation naturelle. "Ease in" = démarre lentement → sensation de lourdeur. Pour les hovers, préférez toujours "Ease out".
+                </div>
+            </div>
+
+            <!-- Tab 1 : Scroll -->
+            <div class="tab-content" id="tab-1">
+                <div class="scenario-header">
+                    <div class="scenario-icon">📜</div>
+                    <div>
+                        <h4>Apparition des sections au scroll</h4>
+                        <p>Chaque section monte et apparaît progressivement quand l'utilisateur fait défiler la page</p>
+                    </div>
+                </div>
+
+                <div class="steps-list">
+                    <div class="step-row">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <strong>Préparer l'état initial</strong>
+                            <p>Sélectionnez votre section. Ouvrez les Interactions → <strong>"Scroll into view"</strong>. Cliquez sur <strong>"Set initial state"</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <strong>Définir l'état de départ</strong>
+                            <p>Dans l'état initial : <strong>Opacity = 0</strong>, <strong>Move Y = +40px</strong>. La section part cachée et décalée vers le bas.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <strong>Configurer "Scroll into view"</strong>
+                            <p>Ajoutez l'action : <strong>Opacity → 1</strong>, <strong>Move Y → 0</strong>, durée 600ms, easing "Ease out". La section remonte et apparaît.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <strong>Appliquer à la classe (recommandé)</strong>
+                            <p>Webflow vous demande si l'animation s'applique à "This element" ou "Elements with this class". Choisissez <strong>la classe</strong> pour que toutes les sections bénéficient du même effet.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <strong>Régler le décalage (stagger)</strong>
+                            <p>Si vous avez plusieurs cartes dans une grille, activez <strong>"Stagger"</strong> avec un délai de 100ms entre chaque carte — effet cascade très élégant.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning">
+                    <strong>⚠️ Attention :</strong> Toujours tester sur mobile. Un Move Y trop grand ou une durée trop longue peut rendre la navigation inconfortable sur téléphone.
+                </div>
+            </div>
+
+            <!-- Tab 2 : Page load -->
+            <div class="tab-content" id="tab-2">
+                <div class="scenario-header">
+                    <div class="scenario-icon">🚀</div>
+                    <div>
+                        <h4>Animation d'intro au chargement de la page</h4>
+                        <p>Le titre et le sous-titre apparaissent en séquence dès l'ouverture du site</p>
+                    </div>
+                </div>
+
+                <div class="steps-list">
+                    <div class="step-row">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <strong>Créer un Page trigger</strong>
+                            <p>Dans le panneau Interactions → section <strong>"Page triggers"</strong> → cliquez <strong>"+ Page load"</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <strong>Ouvrir la timeline</strong>
+                            <p>Une timeline vide apparaît. C'est ici que vous orchestrez la séquence complète de l'animation, comme un montage vidéo.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <strong>Ajouter le titre en premier</strong>
+                            <p>Cliquez sur <strong>"+"</strong> → sélectionnez votre H1 → ajoutez : Opacity 0→1 + Move Y 30px→0, durée 600ms, départ à 0ms.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <strong>Enchaîner le sous-titre</strong>
+                            <p>Cliquez à nouveau sur <strong>"+"</strong> → sélectionnez votre paragraphe → même animation, mais départ à <strong>200ms</strong> pour créer l'effet de décalage.</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <strong>Ajouter le bouton call-to-action</strong>
+                            <p>Même logique, départ à <strong>400ms</strong>. Vous pouvez aussi ajouter un Scale 0.9→1 pour un effet "pop".</p>
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <strong>Prévisualiser et ajuster</strong>
+                            <p>Utilisez le bouton <strong>▶ Preview</strong> de la timeline pour rejouer l'animation sans recharger la page.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>💡 Règle des 3 secondes :</strong> Une animation d'intro ne doit jamais dépasser 3 secondes au total. Au-delà, l'utilisateur s'impatiente et quitte la page avant même d'avoir vu le contenu.
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SECTION 6 : Points clés ══ -->
+        <div class="section">
+            <h2 class="accent-purple">🎓 Points Clés à Retenir</h2>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="num">1</div>
+                    <h4>Trigger → Action</h4>
+                    <p>Toute interaction = un déclencheur + une (ou plusieurs) action(s). Sans trigger, pas d'animation.</p>
+                </div>
+                <div class="key-point">
+                    <div class="num">2</div>
+                    <h4>2 familles distinctes</h4>
+                    <p>Element trigger (sur un élément) vs Page trigger (sur la page). Ne pas les confondre dans le panneau.</p>
+                </div>
+                <div class="key-point">
+                    <div class="num">3</div>
+                    <h4>L'easing, c'est crucial</h4>
+                    <p>"Ease out" pour les entrées, "Ease in-out" pour les transitions. Évitez "Linear" : ça fait mécanique.</p>
+                </div>
+                <div class="key-point">
+                    <div class="num">4</div>
+                    <h4>Moins c'est plus</h4>
+                    <p>Une page avec 20 animations toutes en même temps est épuisante. 3 animations bien placées font plus d'effet.</p>
+                </div>
+                <div class="key-point">
+                    <div class="num">5</div>
+                    <h4>Classe vs Élément</h4>
+                    <p>Appliquer une animation à une classe permet de la réutiliser sur tous les éléments du même type — gain de temps énorme.</p>
+                </div>
+                <div class="key-point">
+                    <div class="num">6</div>
+                    <h4>Toujours tester sur mobile</h4>
+                    <p>Hover n'existe pas sur mobile. Pensez à adapter ou désactiver certaines interactions pour les petits écrans.</p>
+                </div>
+            </div>
+
+            <div class="analogy" style="margin-top: 1.5rem;">
+                <h4>📲 Le bon réflexe avant d'animer</h4>
+                <p>Posez-vous la question : <strong>"Cette animation aide-t-elle l'utilisateur à comprendre ou à naviguer ?"</strong><br>
+                Si la réponse est non → supprimez-la. Une animation décorative sans utilité est une distraction, pas une amélioration.</p>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script>
+        function showTab(index) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + index).classList.add('active');
+            document.querySelectorAll('.tab')[index].classList.add('active');
+        }
+
+        function toggleDark() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('darkBtn').textContent = '🌙 Mode sombre';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('darkBtn').textContent = '☀️ Mode clair';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('darkBtn').textContent = '☀️ Mode clair';
+        }
+    </script>
+</body>
+</html>
