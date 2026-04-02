@@ -6,6 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprendre le CMS Webflow - Blog de Luna</title>
     <style>
+        :root {
+            --bg-page: #F7FAFC;
+            --bg-section: #ffffff;
+            --bg-schema: #F7FAFC;
+            --bg-field-card: #F7FAFC;
+            --bg-example: #EDF2F7;
+            --bg-blog-card: #ffffff;
+            --bg-flow-step: #ffffff;
+            --text-primary: #2D3748;
+            --text-secondary: #4A5568;
+            --border-card: #E2E8F0;
+            --border-tabs: #E2E8F0;
+            --shadow: rgba(0,0,0,0.08);
+            --shadow-card: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #1A202C;
+            --bg-section: #2D3748;
+            --bg-schema: #1A202C;
+            --bg-field-card: #1A202C;
+            --bg-example: #1A202C;
+            --bg-blog-card: #2D3748;
+            --bg-flow-step: #2D3748;
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --border-card: #4A5568;
+            --border-tabs: #4A5568;
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-card: rgba(0,0,0,0.4);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +47,9 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #2D3748;
-            background: #F7FAFC;
+            color: var(--text-primary);
+            background: var(--bg-page);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .header {
@@ -43,11 +76,12 @@
         }
 
         .section {
-            background: white;
+            background: var(--bg-section);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         .section h2 {
@@ -60,7 +94,7 @@
         }
 
         .section h3 {
-            color: #2D3748;
+            color: var(--text-primary);
             font-size: 1.5rem;
             margin: 2rem 0 1rem 0;
         }
@@ -74,12 +108,18 @@
             color: #2D3748;
         }
 
+        [data-theme="dark"] .highlight {
+            background: #2D2020;
+            color: #E2E8F0;
+        }
+
         .schema-container {
-            background: #F7FAFC;
+            background: var(--bg-schema);
             padding: 2rem;
             border-radius: 8px;
             margin: 2rem 0;
             overflow-x: auto;
+            transition: background 0.3s ease;
         }
 
         .schema {
@@ -96,12 +136,13 @@
         }
 
         .schema-box {
-            background: white;
+            background: var(--bg-section);
             border: 2px solid #667eea;
             border-radius: 8px;
             padding: 1.5rem;
             flex: 1;
             position: relative;
+            transition: background 0.3s ease;
         }
 
         .schema-box h4 {
@@ -111,7 +152,7 @@
 
         .schema-box p {
             font-size: 0.9rem;
-            color: #4A5568;
+            color: var(--text-secondary);
         }
 
         .schema-arrow {
@@ -164,11 +205,12 @@
         }
 
         .field-card {
-            background: #F7FAFC;
-            border: 2px solid #E2E8F0;
+            background: var(--bg-field-card);
+            border: 2px solid var(--border-card);
             border-radius: 8px;
             padding: 1rem;
-            color: #2D3748;
+            color: var(--text-primary);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .field-card h4 {
@@ -192,6 +234,10 @@
             padding: 1.5rem;
             margin: 1.5rem 0;
             border-radius: 4px;
+        }
+
+        [data-theme="dark"] .analogy {
+            background: #1C2F23;
         }
 
         .analogy h4 {
@@ -228,11 +274,12 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            background: white;
-            color: #2D3748;
+            background: var(--bg-flow-step);
+            color: var(--text-primary);
             padding: 1rem;
             border-radius: 8px;
             border-left: 4px solid #667eea;
+            transition: background 0.3s ease;
         }
 
         .flow-number {
@@ -249,18 +296,20 @@
         }
 
         .example-result {
-            background: #EDF2F7;
+            background: var(--bg-example);
             padding: 2rem;
             border-radius: 8px;
             margin: 2rem 0;
+            transition: background 0.3s ease;
         }
 
         .blog-card {
-            background: white;
+            background: var(--bg-blog-card);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px var(--shadow-card);
             margin-bottom: 1rem;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         .blog-card img {
@@ -279,7 +328,7 @@
         }
 
         .blog-card h4 {
-            color: #2D3748;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
@@ -296,7 +345,7 @@
         .tabs {
             display: flex;
             gap: 1rem;
-            border-bottom: 2px solid #E2E8F0;
+            border-bottom: 2px solid var(--border-tabs);
             margin-bottom: 2rem;
         }
 
@@ -325,29 +374,58 @@
             display: block;
         }
 
+        .dark-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .dark-toggle:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        [data-theme="dark"] .dark-toggle {
+            background: rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.3);
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .schema {
                 min-width: auto;
             }
-            
+
             .schema-row {
                 flex-direction: column;
             }
-            
+
             .tabs {
                 flex-direction: column;
                 border-bottom: none;
             }
-            
+
             .tab {
                 border-left: 3px solid transparent;
                 border-bottom: none;
             }
-            
+
             .tab.active {
                 border-left-color: #667eea;
                 border-bottom: none;
@@ -356,6 +434,8 @@
     </style>
 </head>
 <body>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙 Mode sombre</button>
+
     <div class="header">
         <h1>📚 Le CMS Webflow Expliqué Simplement</h1>
         <p>Comprendre le système de blog en 15 minutes avec le projet de Luna</p>
@@ -364,23 +444,23 @@
     <div class="container">
         <!-- Section 1: L'analogie -->
         <div class="section">
-            <h2>🍪 Comprendre avec une analogie simple</h2>
-            
+            <h2>📱 Comprendre avec une analogie simple</h2>
+
             <div class="analogy">
-                <h4>🏭 Le CMS c'est comme une usine de gâteaux</h4>
-                <p><strong>Imaginez une pâtisserie industrielle :</strong></p>
+                <h4>📱 Le CMS c'est comme l'appli Contacts de votre smartphone</h4>
+                <p><strong>Ouvrez l'appli Contacts de votre téléphone et observez :</strong></p>
                 <ul style="margin-left: 2rem; margin-top: 1rem;">
-                    <li><strong>Le moule à gâteau</strong> = La Collection (structure)</li>
-                    <li><strong>La recette</strong> = Les champs (ingrédients nécessaires)</li>
-                    <li><strong>Chaque gâteau produit</strong> = Un article de blog</li>
-                    <li><strong>La vitrine de présentation</strong> = La page liste du blog</li>
-                    <li><strong>L'emballage individuel</strong> = La page détail d'un article</li>
+                    <li><strong>L'appli Contacts</strong> = La Collection (l'endroit qui stocke tout)</li>
+                    <li><strong>La fiche type d'un contact</strong> (nom, photo, tél, email...) = Les champs (Fields)</li>
+                    <li><strong>Chaque contact enregistré</strong> = Un article de blog</li>
+                    <li><strong>La liste de tous vos contacts</strong> = La page blog (Collection List)</li>
+                    <li><strong>La fiche d'un contact précis</strong> = La page d'un article (Collection Template)</li>
                 </ul>
             </div>
 
             <p style="margin-top: 1.5rem; font-size: 1.1rem;">
-                <strong>Principe clé :</strong> Vous créez UNE FOIS le moule (la structure), 
-                puis vous l'utilisez pour créer autant de gâteaux (articles) que vous voulez !
+                <strong>Principe clé :</strong> Vous configurez UNE FOIS le format d'une fiche contact,
+                et votre téléphone l'applique automatiquement à tous vos contacts !
             </p>
         </div>
 
@@ -401,9 +481,9 @@
                             <p>Les informations à remplir<br>Exemple: Titre, Image, Texte</p>
                         </div>
                     </div>
-                    
+
                     <div style="text-align: center; font-size: 2rem; color: #667eea;">↓</div>
-                    
+
                     <div class="schema-row">
                         <div class="schema-box">
                             <h4>3️⃣ COLLECTION LIST</h4>
@@ -459,7 +539,7 @@
                 <div class="step">
                     <h3><span class="step-number">2</span>Définir les champs nécessaires</h3>
                     <p style="margin-bottom: 1rem;">Webflow crée automatiquement 2 champs. Ajoutez les autres :</p>
-                    
+
                     <div class="field-list">
                         <div class="field-card">
                             <h4>Name (Auto)</h4>
@@ -567,7 +647,7 @@
                 <div class="step">
                     <h3><span class="step-number">5</span>Designer l'affichage d'un article dans la liste</h3>
                     <p style="margin-bottom: 1rem;">Dans le "Collection Item", ajouter et connecter les éléments :</p>
-                    
+
                     <div class="visual-flow">
                         <div class="flow-step">
                             <div class="flow-number">1</div>
@@ -653,7 +733,7 @@
         <!-- Section 4: Exemple de résultat -->
         <div class="section">
             <h2>✨ Résultat Final : Blog de Luna</h2>
-            
+
             <h3>Page Blog (Collection List)</h3>
             <div class="example-result">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
@@ -662,7 +742,7 @@
                         <div class="blog-card-content">
                             <span class="category">Relaxation</span>
                             <h4>5 techniques de relaxation</h4>
-                            <p style="color: #4A5568; font-size: 0.9rem;">Découvrez 5 techniques simples pour retrouver sérénité et équilibre...</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Découvrez 5 techniques simples pour retrouver sérénité et équilibre...</p>
                             <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
                         </div>
                     </div>
@@ -672,7 +752,7 @@
                         <div class="blog-card-content">
                             <span class="category">Mindfulness</span>
                             <h4>L'art de la respiration consciente</h4>
-                            <p style="color: #4A5568; font-size: 0.9rem;">La respiration consciente, porte d'entrée vers un état de calme...</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">La respiration consciente, porte d'entrée vers un état de calme...</p>
                             <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
                         </div>
                     </div>
@@ -682,7 +762,7 @@
                         <div class="blog-card-content">
                             <span class="category">Développement Personnel</span>
                             <h4>Créer sa routine matinale</h4>
-                            <p style="color: #4A5568; font-size: 0.9rem;">Comment structurer vos matinées pour commencer dans l'énergie...</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Comment structurer vos matinées pour commencer dans l'énergie...</p>
                             <a href="#" class="btn" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">Lire l'article</a>
                         </div>
                     </div>
@@ -693,13 +773,13 @@
             <div class="example-result">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <span class="category" style="font-size: 0.9rem;">Relaxation</span>
-                    <h2 style="margin: 1rem 0; color: #2D3748;">5 techniques de relaxation pour un quotidien apaisé</h2>
-                    <p style="color: #4A5568;">Par Luna Martinez • 12 mars 2025</p>
+                    <h2 style="margin: 1rem 0; color: var(--text-primary);">5 techniques de relaxation pour un quotidien apaisé</h2>
+                    <p style="color: var(--text-secondary);">Par Luna Martinez • 12 mars 2025</p>
                 </div>
                 <img src="https://picsum.photos/seed/featured/1200/300" alt="Image Featured" style="width: 100%; height: 300px; object-fit: cover; display: block; border-radius: 8px; margin-bottom: 2rem;">
                 <div style="max-width: 700px; margin: 0 auto; line-height: 1.8;">
                     <p style="margin-bottom: 1rem;">Dans notre quotidien souvent stressant, il est essentiel de prendre des moments pour se reconnecter à soi-même...</p>
-                    <h3 style="color: #2D3748; margin: 1.5rem 0 1rem;">Technique 1 : La respiration profonde</h3>
+                    <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">Technique 1 : La respiration profonde</h3>
                     <p>Description de la technique...</p>
                 </div>
             </div>
@@ -708,23 +788,23 @@
         <!-- Section 5: Points clés -->
         <div class="section">
             <h2>🎓 Points Clés à Retenir</h2>
-            
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
                 <div class="highlight">
                     <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">1. Une Collection = Une structure</h4>
                     <p>Vous créez une fois la structure, elle servira pour tous les articles</p>
                 </div>
-                
+
                 <div class="highlight">
                     <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">2. Les champs = Le contenu</h4>
                     <p>Chaque champ représente une information à remplir (titre, image, texte...)</p>
                 </div>
-                
+
                 <div class="highlight">
                     <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">3. Collection List = Plusieurs</h4>
                     <p>Affiche plusieurs articles ensemble (page blog)</p>
                 </div>
-                
+
                 <div class="highlight">
                     <h4 style="color: #E53E3E; margin-bottom: 0.5rem;">4. Template = Un seul</h4>
                     <p>Design appliqué automatiquement à chaque article individuel</p>
@@ -733,29 +813,41 @@
 
             <div class="analogy" style="margin-top: 2rem;">
                 <h4>💡 La magie du CMS</h4>
-                <p><strong>Sans CMS :</strong> Vous devez créer manuellement une page pour chaque article (50 articles = 50 pages à créer et maintenir)</p>
-                <p style="margin-top: 0.5rem;"><strong>Avec CMS :</strong> Vous créez 1 fois le design, puis vous ajoutez juste le contenu (50 articles = 50x remplir un formulaire simple)</p>
+                <p><strong>Sans CMS :</strong> C'est comme si vous deviez dessiner à la main une fiche papier pour chaque contact (50 contacts = 50 fiches à créer et tenir à jour manuellement)</p>
+                <p style="margin-top: 0.5rem;"><strong>Avec CMS :</strong> Vous définissez une fois le format de la fiche, puis vous ajoutez juste les infos — votre téléphone (Webflow) s'occupe du reste automatiquement</p>
             </div>
         </div>
-
-       
-
-       
     </div>
 
     <script>
         function showTab(index) {
-            // Cacher tous les contenus
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
-            
-            // Désactiver tous les onglets
+
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Activer le contenu et l'onglet sélectionnés
+
             document.getElementById('tab-' + index).classList.add('active');
             tabs[index].classList.add('active');
+        }
+
+        function toggleDark() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('darkBtn').textContent = '🌙 Mode sombre';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('darkBtn').textContent = '☀️ Mode clair';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Appliquer le thème sauvegardé au chargement
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('darkBtn').textContent = '☀️ Mode clair';
         }
     </script>
 </body>

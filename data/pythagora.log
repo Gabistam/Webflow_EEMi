@@ -1,0 +1,12 @@
+2026-04-02T04:01:47.114Z INFO Is remote: false
+2026-04-02T04:01:47.115Z INFO Starting Local. Installation path: undefined
+2026-04-02T04:01:47.117Z INFO [MainProvider] Creating new MainProvider instance...
+2026-04-02T04:01:47.119Z INFO [TabsManager] Code view listener set up at initialization
+2026-04-02T04:01:47.121Z INFO Installation path exists: c:\Users\gabistam\Desktop\Formateur Web\EEMI\Webflow\Cours_webflow_blog
+2026-04-02T04:01:47.122Z INFO Initializing database with URL: file:C:\Users\gabistam\AppData\Local\Temp\pythagora-temp\pythagora.db
+2026-04-02T04:01:47.128Z INFO Database file exists, skipping prisma generate/push for faster startup
+2026-04-02T04:01:47.130Z INFO Database initialized successfully
+2026-04-02T04:01:47.131Z INFO [Migration] Checking for database migration...
+2026-04-02T04:01:49.147Z INFO [Migration] No migration needed
+2026-04-02T04:01:57.857Z INFO [TabsManager] First file opened, triggering split view
+2026-04-02T04:01:57.858Z INFO [MainProvider] First file opened, creating split view
